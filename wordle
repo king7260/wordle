@@ -1,0 +1,67 @@
+#!/usr/bin/python
+# -*-coding:UTF-8 -*-
+# wordle游戏
+from random import randint
+
+with open("C:/Users/think book/Desktop/‭学习资料/大二/python学习/wordle游戏/wordle.txt", encoding='utf-8') as f:
+    wordlist = f.read().split('\n')     # .read()获得所有内容； .split('\n')按'\n'分割成列表
+f.close()
+cnt = 6  # 最多猜词次数
+index_num = randint(0, 12946)  # 随机在词库中找一个单词
+right_word = wordlist[index_num]
+print("欢迎来到wordle游戏，以下是注意事项：")
+print("您一共只有6次猜词机会，如果输入的不是符合要求的英语单词，不会扣除猜词次数，请好好珍惜！")
+word = input("请输入一个含有5个字母的单词")  # 输入单词
+
+# 改变输出字体颜色
+from colorama import init, Fore
+init(autoreset=True)
+
+
+class Log(object):
+    #  前景色:红色  背景色:默认
+    def red(self, s):
+        return Fore.RED + s + Fore.RESET
+
+    #  前景色:绿色  背景色:默认
+    def green(self, s):
+        return Fore.GREEN + s + Fore.RESET
+
+    #  前景色:黄色  背景色:默认
+    def yellow(self, s):
+        return Fore.YELLOW + s + Fore.RESET
+
+
+color = Log()
+
+
+while word != right_word:
+    # 如果所猜的内容不是符合要求的单词，或者不是一个单词，则重新输入
+    if word not in wordlist:
+        print("您输入的不是一个含五个字母的单词！")
+    else:
+        cnt -= 1
+        print("您猜错了！")
+        i = 0
+        for letter in word:
+            # 字母不在正确单词中，显示红色
+            if letter not in right_word:
+                print(color.red(letter), end="")
+            # 字母在正确单词中，并且在正确位置上，显示绿色
+            elif letter == right_word[i]:
+                print(color.green(letter), end="")
+            # 字母在正确单词中，但不在正确位置上，显示黄色
+            else:
+                print(color.yellow(letter), end="")
+            i += 1
+        print("")
+    if cnt > 0:
+        print("剩余猜词次数：", end="")
+        print(cnt)
+        word = input("请再次输入一个含有5个字母的单词")
+    if cnt == 0:
+        print("您已无猜词机会，正确答案为：", end="")
+        print(right_word)
+        break
+else:
+    print("恭喜您，您猜对了！")
